@@ -54,33 +54,32 @@ class Signup(BaseHandler):
 
     def post(self):
         have_error = False
-        username = self.request.get('username')
-        password = self.request.get('password')
-        verify = self.request.get('verify')
-        email = self.request.get('email')
+        probe_name = self.request.get('probe_name')
+        target = self.request.get('target')
+        probes_to_send = self.request.get('probes_to_send')
+        time_between_probes = self.request.get('time_between_probes')
+        time_between_tests = self.request.get('time_between_tests')
+        successive_loss = self.request.get('successive_loss')
+        destination_interface = self.request.get('destination_interface')
+        target_next_hop = self.request.get('target_next_hop')
+        failover_destination = self.request.get('failover_destination')
+        failover_next_hop = self.request.get('failover_next_hop')
 
-        params = dict(username = username,
-                      email = email)
-
-        if not valid_username(username):
-            params['error_username'] = "That's not a valid username."
-            have_error = True
-
-        if not valid_password(password):
-            params['error_password'] = "That wasn't a valid password."
-            have_error = True
-        elif password != verify:
-            params['error_verify'] = "Your passwords didn't match."
-            have_error = True
-
-        if not valid_email(email):
-            params['error_email'] = "That's not a valid email."
-            have_error = True
+        params = dict(probe_name = probe_name, target = target, 
+		      probes_to_send = probes_to_send,
+        time_between_probes = time_between_probes,
+        time_between_tests = time_between_tests,
+        successive_loss = successive_loss,
+        destination_interface = destination_interface,
+        target_next_hop = target_next_hop,
+        failover_destination = failover_destination,
+        failover_next_hop = failover_next_hop
+                      )
 
         if have_error:
             self.render('signup-form.html', **params)
         else:
-            self.redirect('/unit2/welcome?username=' + username)
+            self.render('ip_monitor.j2',  **params)
 
 class Welcome(BaseHandler):
     def get(self):
@@ -88,6 +87,7 @@ class Welcome(BaseHandler):
         if valid_username(username):
             self.render('welcome.html', username = username)
         else:
+            ##self.render('ip_monitor.j2', username = username)
             self.redirect('/unit2/signup')
 
 app = webapp2.WSGIApplication([('/unit2/rot13', Rot13),
