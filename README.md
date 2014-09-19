@@ -21,4 +21,8 @@ Adding changes
 4. % git commit -m "updates"
 5. % git push origin master
 
+Remove files
+1. % git rm file-name
+2. % git rm -r directory-name
+3. 
 
